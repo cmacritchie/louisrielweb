@@ -1,12 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import App from './components/App';
+import { Provider as HouseProvider } from './contexts/HousePointsContext';
+import { Provider as UserProvider } from './contexts/UserContext';
+import { Provider as WhiteListProvider } from './contexts/WhiteListContext'
+import { Provider as AdminProvider } from './contexts/AdminListContext'
 
-ReactDOM.render(<App />, document.getElementById('root'));
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+ReactDOM.render(
+    <AdminProvider>
+        <WhiteListProvider>
+            <HouseProvider>
+                <UserProvider>
+                    <App />
+                </UserProvider>
+            </HouseProvider>
+        </WhiteListProvider>
+    </AdminProvider>
+, document.getElementById('root'));
+
+
