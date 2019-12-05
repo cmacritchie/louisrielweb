@@ -62,6 +62,11 @@ const  HousePoints = ({ initialPoints, edit, id }) => {
   return (
     <div>
     <h2>House Entry</h2>
+    <table>
+      <tbody>
+
+
+    
             <RecordEntry onEntryChange={(points)=>setWolfPoints(points)}
                         initialValue={initialPoints.wolf}
                         colour="white"
@@ -78,7 +83,9 @@ const  HousePoints = ({ initialPoints, edit, id }) => {
                         initialValue={initialPoints.turtle}
                         colour="green"
                         house="Turtle" />
-        <button onClick={handleSubmit}>Submit</button>
+             </tbody>
+        </table>
+        <button className="btn green accent-4" onClick={handleSubmit}>Submit</button>
     </div>
   );
 }

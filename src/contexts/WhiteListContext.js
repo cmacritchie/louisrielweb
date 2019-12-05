@@ -1,43 +1,62 @@
 import createDataContext from './createDataContext';
+import { toastSuccess, toastError } from './toasts'
 import axios from 'axios'
 
 const FETCH_WHITELIST = 'fetch_whiteList';
 const SUBMIT_WHITELIST = 'submit_whiteList';
 const PATCH_WHITELIST = 'patch_whitelist';
 const DELETE_WHITELIST = 'delete_whitelist';
+const ERROR_WHITELIST = 'error_whitelist';
 
 const FETCH_WHITELIST_USER = 'fetch_whiteList_user'
-
-const sortByKey = key => (a, b) => a[key] > b[key] ? 1 : -1
 
 const whiteListReducer = (state, action) => {
     switch (action.type) {
         case FETCH_WHITELIST:
             return {...state, loaded:true, entries:action.payload }
         case SUBMIT_WHITELIST:
-            return {...state, entries:[action.payload, ...state.entries]}
-        case PATCH_WHITELIST:
-            
-            return {...state, 
+            return {...state, entries:[{...action.payload, user:[]}, ...state.entries], error:null}
+        case PATCH_WHITELIST: 
+            return {...state, error:null,
                     entries: state.entries.map(entry =>{
                         if(entry._id !== action.payload._id){
                             return entry
                         }
-                        return action.payload
+                        return {...action.payload, user:[] }
                     })
             }
         case DELETE_WHITELIST:
-            return {...state,
+            return {...state, error:null,
                     entries: state.entries.filter(entry=> entry._id !== action.payload._id)}
+        case ERROR_WHITELIST:
+            return {...state, error: action.payload }
         default:
             return state
     }
 }
 
+const errorHandler = (errorCode) => {
+    switch(errorCode){
+        case 400:
+            return 'Email Already in White List'
+        case 504:
+            return 'Check Internet Connection or Contact System Administrator'
+        default:
+            return `error occured, please contact system administrator. Error code: ${errorCode}`
+    }
+}
+
 //submitpoints
 const submitWhiteList = dispatch => async (entry) => {
-    const response = await axios.post('/api/whitelist', {email:entry})
-    dispatch({type: SUBMIT_WHITELIST, payload: response.data})
+
+    try {
+        const response = await axios.post('/api/whitelist', {email:entry})
+        toastSuccess("Email Added")
+        dispatch({type: SUBMIT_WHITELIST, payload: response.data})
+    } catch (e) {
+        toastError(errorHandler(e.response.status))
+        dispatch({type: ERROR_WHITELIST, payload: errorHandler(e.response.status) })
+    }
 }
 
 const fetchWhiteList = dispatch => async () => {
@@ -46,13 +65,28 @@ const fetchWhiteList = dispatch => async () => {
 }
 
 const patchWhiteList = dispatch => async (id, email) => {
-    const response = await axios.patch(`/api/whitelist/${id}`, {email})
-    dispatch({type: PATCH_WHITELIST, payload: response.data})
+    try{
+        const response = await axios.patch(`/api/whitelist/${id}`, {email})
+        toastSuccess('Email Updated')
+        dispatch({type: PATCH_WHITELIST, payload: response.data})
+    } catch (e) {
+        toastError(errorHandler(e.response.status))
+        dispatch({type: ERROR_WHITELIST, payload: errorHandler(e.response.status)})
+        
+    }
+    
 }
 
 const deleteWhiteList = dispatch => async (id) => {
-    const response = await axios.delete(`/api/whitelist/${id}`)
-    dispatch({type: DELETE_WHITELIST, payload: response.data})
+    try{
+        const response = await axios.delete(`/api/whitelist/${id}`)
+        toastSuccess('Email Deleted')
+        dispatch({type: DELETE_WHITELIST, payload: response.data})
+        // toastSuccess('Email Deleted')
+    } catch (e) {
+        debugger;
+        toastError('Error Deleting Email')
+    }
 }
 
 
@@ -66,5 +100,5 @@ const fetchWhiteListUser = dispatch => async (id) => {
 export const { Context, Provider } = createDataContext(
     whiteListReducer,
     { submitWhiteList, fetchWhiteList, patchWhiteList, deleteWhiteList },
-    { entries:[], loaded:false }
+    { entries:[], loaded:false, error:null }
 )

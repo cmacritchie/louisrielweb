@@ -1,13 +1,15 @@
 import React from 'react'
 
-const RenderTable = ({children}) => {
+const RenderTable = ({children, profile}) => {
     return (
         <table>
             <thead>
                 <tr>
                     <th>Email</th>
+                    {profile && 
+                        <th>Profile</th>
+                    }
                     <th>Edit</th>
-                    <th>Profile</th>
                     <th>Delete</th>
                 </tr>
             </thead>
@@ -16,6 +18,10 @@ const RenderTable = ({children}) => {
             </tbody>
         </table>
     )
+}
+
+RenderTable.defaultProps  = {
+    profile: false
 }
 
 export default RenderTable

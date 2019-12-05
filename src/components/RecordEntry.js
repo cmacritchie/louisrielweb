@@ -8,32 +8,29 @@ const RecordEntry = ({ onEntryChange, initialValue, colour, house, }) => {
     },[points])
 
     return(
-            <div style={{backgroundColor:colour}}>
-                <h3>House: {house}</h3>
-                <ul>
-                    <li>
-                        <button onClick={()=>setPoints(points + 25)} >+ 25</button>
-                    </li>
-                    <li>
-                        <button onClick={()=>setPoints(points + 5)} >+ 5</button>
-                    </li>
-                    <li>
-                        <button onClick={()=>setPoints(points + 1)} >+ 1</button>
-                    </li>
-                    <li>
-                        <input value={points}  readOnly/>
-                    </li>
-                    <li>
-                        <button onClick={()=>setPoints(points -1)} >- 1</button>
-                    </li>
-                    <li>
-                        <button onClick={()=>setPoints(points - 5)} >- 5</button>
-                    </li>
-                    <li>
-                        <button onClick={()=>setPoints(points - 25)} >- 25</button>
-                    </li>
-                </ul>
-            </div>
+            <tr style={{backgroundColor:colour}}>
+                    <td>
+                        <button className="btn green accent-3" onClick={()=>setPoints(points + 25)}>25</button>
+                    </td>
+                    <td>
+                        <button className="btn green accent-2" onClick={()=>setPoints(points + 5)} >5</button>
+                    </td>
+                    <td>
+                        <button className="btn green accent-1" onClick={()=>setPoints(points + 1)} >1</button>
+                    </td>
+                    <td>
+                        <input  value={points}  readOnly/>
+                    </td>
+                    <td>
+                        <button className="btn red lighten-4" onClick={()=>setPoints(points -1)}>1</button>
+                    </td>
+                    <td>
+                        <button className="btn red lighten-1" onClick={()=>setPoints(points - 5)}>5</button>
+                    </td>
+                    <td>
+                        <button className="btn red darken-4" onClick={()=>setPoints(points - 25)}>25</button>
+                    </td>
+            </tr>
     )
 }
 

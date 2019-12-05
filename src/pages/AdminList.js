@@ -12,7 +12,9 @@ const AdminList = props => {
         } = useContext(AdminContext)
 
     useEffect(() => {
-        fetchAdmins()
+        if(!loaded){
+            fetchAdmins()
+        }
     }, [loaded])
 
     if(!loaded){
@@ -34,37 +36,47 @@ const AdminList = props => {
                  return (
                      <tr key={entry._id}>
                          <td>{entry.email}</td>
-                         <td><button onClick={()=>setActiveId(entry._id)}>edit</button></td>
-                         <td><button onClick={()=>deleteAdmin(entry._id)}>Delete</button></td>
+                         <td></td>
+                         <td><button className='btn amber' onClick={()=>setActiveId(entry._id)}><i className="material-icons">edit</i></button></td>
+                         <td><button className='btn red darken-1' onClick={()=>deleteAdmin(entry._id)}><i className="material-icons">delete_forever</i></button></td>
                      </tr>
                  )
              }
          })
      }
 
-    
-
-     if(entries.length === 0) {
-        return <p>No White List emails!</p>
-    } else {
-
-        return (
-            <>
-                <h2>add to admin List</h2>
-                <RenderTable>
-                    <tr key={1}>
-                    <AdminListWrapper edit={false}
-                                        id={1}
-                                        />
+    return (
+        <>
+            <h2>add to admin List</h2>
+            <table>
+                <thead>
+                    <tr >
+                        <th>New Email</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
-                </RenderTable>
-                <br />
-                <RenderTable>
+                </thead>
+                <tbody>
+                <tr key={1}>
+                <AdminListWrapper edit={false}
+                                    id={1}
+                                    />
+                </tr>
+                </tbody>
+            </table>
+            
+            <br />
+            { entries.length > 0 ? 
+                <RenderTable profile={true}>
                     {renderAdminList()}
                 </RenderTable>
-            </>
-        )
-    }
+            :
+                <p>No Admin emails!</p>
+            }
+        </>
+    )
+    
 }
 
 AdminList.propTypes = {

@@ -6,8 +6,8 @@ const EmailForm = ({ onSubmit, onCancel, onEmailChange,  email, id}) => {
         <>
             <td><input value={email} onChange={e => onEmailChange(e.target.value)} /></td>
             <td></td>
-            <td><button onClick={()=>onSubmit()}>Submit</button></td>
-            <td><button onClick={()=>onCancel()}>Cancel</button></td>
+            <td><button className='btn green accent-3' onClick={()=>onSubmit()}><i className="material-icons">done</i></button></td>
+            <td><button className='btn blue lighten-1' onClick={()=>onCancel()}>Cancel</button></td>
         </>
     )
 }

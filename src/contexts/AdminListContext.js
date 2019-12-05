@@ -1,5 +1,6 @@
 import createDataContext from './createDataContext'
 import axios from 'axios'
+import { toastSuccess, toastError } from './toasts'
 
 
 const FETCH_ADMINS = 'fetch_admins'
@@ -31,23 +32,51 @@ const adminReducer = (state, action) => {
 }
 
 const submitAdmin = dispatch => async (email) => {
-    const response = await axios.post('/api/admin', {email})
-    dispatch({ type: SUBMIT_ADMIN, payload: response.data })
+    try{
+        const response = await axios.post('/api/admin', {email})
+        dispatch({ type: SUBMIT_ADMIN, payload: response.data })
+        toastSuccess("Admin Submitted")
+    } catch (e) {
+        if(e.response.status === 400) {
+            toastError("That email already exists")
+        } else { 
+            toastError("Error Submitting Email")
+        }
+        
+    }
 }
 
 const fetchAdmins = dispatch => async () => { 
-    const response = await axios.get('/api/admin')
-    dispatch({ type: FETCH_ADMINS, payload: response.data})
+    try {
+        const response = await axios.get('/api/admin')
+        dispatch({ type: FETCH_ADMINS, payload: response.data})
+    } catch(e) {
+        toastError("Error fetching admins")
+    }
 }
 
 const patchAdmin = dispatch => async(id, email)=>{
-    const response = await axios.patch(`/api/admin/${id}`, {email})
-    dispatch({type: PATCH_ADMIN, payload: response.data})
+    try {
+        const response = await axios.patch(`/api/admin/${id}`, {email})
+        dispatch({type: PATCH_ADMIN, payload: response.data})
+        toastSuccess("Admin Edited")
+    } catch (e) {
+        if(e.response.status === 400) {
+            toastError("Email Already Exists")
+        } else { 
+            toastError("Error Editing Email")
+        }
+    }
 }
 
 const deleteAdmin = dispatch => async (id) => {
-    const response = await axios.delete(`/api/admin/${id}`)
-    dispatch({type: DELETE_ADMIN, payload: response.data})
+    try{
+        const response = await axios.delete(`/api/admin/${id}`)
+        dispatch({type: DELETE_ADMIN, payload: response.data})
+        toastSuccess("Admin Deleted")
+    } catch (e) {
+        toastError("Error deleting admins")
+    }
 }
 
 export const { Context, Provider } = createDataContext(

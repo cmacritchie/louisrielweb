@@ -1,40 +1,20 @@
 import React, { useContext, useEffect, useState} from 'react'
 import { Context as HouseContext } from '../contexts/HousePointsContext'
-import { Context as UserContext } from '../contexts/UserContext'
 import moment from 'moment'
 import { NavLink } from 'react-router-dom';
-
-import axios from 'axios'
 
 const UserStats = ({ match }) => {
     const { params } = match
     const userId = params.id
 
-    const {state:{ myEntriesLoaded, entries, myEntries, adminEntries, entryLoaded },
+    const {state:{ entries, entryLoaded },
     fetchUserPoints, deletePoints } = useContext(HouseContext)
-
-    const { state: { isAuthenticated, user } } = useContext(UserContext)
-
-    const [isLoaded, setLoaded] = useState(false)
-    const [entryList, setEntryList] = useState([])
-    const [userProfile, setUserProfile] = useState()
 
             useEffect(() => {
                 if(Object.keys(params).length > 0 && !entries[userId]){
-                    // if(user._id === userId ) {
-                    //     console.log('my points')
-                    // } else {
-                    //     console.log('other points')
                         fetchUserPoints(userId)
                     }
-                    //setUserProfile(entries[userId])
-
-                   // setUser(adminEntries[userId])
-                    //set to axios
-                // }
-            
             }, [])
-        
             
             if(entryLoaded && entries[userId]) {
                 const userProfile = entries[userId]
@@ -65,8 +45,8 @@ const UserStats = ({ match }) => {
                                                 <td>{entry.bear}</td>
                                                 <td>{entry.wolf}</td>
                                                 <td>{entry.turtle}</td>
-                                                <td><NavLink to={`/houseentry/${entry._id}`}>Edit</NavLink></td>
-                                                <td><button onClick={()=>deletePoints(entry._id)}>Delete</button></td>
+                                                <td><NavLink className='btn amber' to={`/houseentry/${entry._id}`}><i className="material-icons">edit</i></NavLink></td>
+                                                <td><button className='btn red darken-1' onClick={()=>deletePoints(entry._id)}><i className="material-icons">delete_forever</i></button></td>
                                             </tr>
                                         )
                                     }) 

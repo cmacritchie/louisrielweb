@@ -1,5 +1,6 @@
 import createDataContext from './createDataContext';
 import axios from 'axios'
+import { toastSuccess, toastError } from './toasts'
 import { socket } from '../api/socketAPI'
 // import socketIOClient from "socket.io-client";
 
@@ -59,23 +60,35 @@ const housePointReducer = (state, action) => {
     }
 }
 
+
 const wsUpdatePoints = dispatch => (housePoints) => {
     console.log(housePoints)
     dispatch({ type: WS_SUBMIT_HOUSE_POINTS, payload: housePoints });   
 }
 
 const submitPoints = dispatch => async (points) => {
-    const response = await axios.post('/api/house', points)
-    dispatch({ type: SUBMIT_HOUSE_POINTS, payload: response.data });
-    socket.emit('incomingData', response.data, (error) =>{
-        console.log('post ws error',error)
-    })
+    try{
+        const response = await axios.post('/api/house', points)
+        dispatch({ type: SUBMIT_HOUSE_POINTS, payload: response.data });
+        toastSuccess("House Points Added")
+        socket.emit('incomingData', response.data, (error) =>{
+            console.log('post ws error',error)
+        })
+
+    } catch (e) {
+        toastError("Error Adding House Points")
+    }
 }
 
 const editPoints = dispatch => async (id, points) => {
-    const response = await axios.patch(`/api/house/${id}`, points)
-    dispatch({ type: PATCH_HOUSE_POINTS, payload: response.data })
-
+    try{
+        const response = await axios.patch(`/api/house/${id}`, points)
+        dispatch({ type: PATCH_HOUSE_POINTS, payload: response.data })
+        toastSuccess("House Points Edited")
+    } catch (e) {
+        toastError("Error Adding House Points")
+    }
+    
 }
 
 const fetchPoints = dispatch => async () => {
@@ -86,8 +99,13 @@ const fetchPoints = dispatch => async () => {
 }
 
 const deletePoints = dispatch => async (id) => {
-    const response = await axios.delete(`/api/house/${id}`)
-    dispatch({type: DELETE_HOUSE_POINTS, payload: response.data })
+    try {
+        const response = await axios.delete(`/api/house/${id}`)
+        dispatch({type: DELETE_HOUSE_POINTS, payload: response.data })
+        toastSuccess('House Points Deleted')
+    } catch (e) {
+        toastError('Error deleting house points')
+    }
 }
 
 const fetchMyPoints = dispatch => async () => {

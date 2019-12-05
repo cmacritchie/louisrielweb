@@ -9,14 +9,14 @@ const userReducer = (state, action) => {
             return {...state, 
                     user:action.payload,
                     isAuthenticated:true,
-                    loading:false
+                    loaded:true
                 }
         case 'logOut':
         case SIGN_IN_FAIL:
             return {
                 user:null,
                 isAuthenticated:false,
-                loading:false
+                loaded:false
             }
     }
 }
@@ -31,6 +31,14 @@ const fetchUser = dispatch => async () => {
     
 }
 
+// const deleteUser = dispatch => async (id) => {
+//     try {
+//         const response = await axios.delete('/api/')
+//     } catch (e) {
+
+//     }
+// }
+
 const logOut = dispatch => async () => {
     const response = await axios.get('/api/logout')  
     dispatch({type: 'logOut', payload: response.data})
@@ -38,6 +46,6 @@ const logOut = dispatch => async () => {
 
 export const { Context, Provider } = createDataContext(
     userReducer,
-    { fetchUser, logOut },
-    { isAuthenticated:false, user: null, loading:false }
+    { fetchUser, logOut},
+    { isAuthenticated:false, user: null, loaded:false }
 )

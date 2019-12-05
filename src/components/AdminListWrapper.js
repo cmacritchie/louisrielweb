@@ -30,7 +30,7 @@ const AdminListWrapper = ({ edit, id, onCancel, initialEmail }) => {
     return(
         <EmailForm onSubmit={() => submitForm()} 
                         onCancel={() => cancel()}
-                        onEmailChange={(val)=>changeEmail(val)}
+                        onEmailChange={(val) => changeEmail(val)}
                         email={email} />
     )
 }

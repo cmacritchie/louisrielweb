@@ -75,8 +75,13 @@ const HouseTable = ({ housePoints }) => {
     )
 }
 
-HouseTable.propTypes = {
-
+HouseTable.defaultProps  = {
+    housePoints: {
+        bear:0,
+        wolf:0,
+        eagle:0,
+        turtle:0
+    }
 }
 
 export default HouseTable

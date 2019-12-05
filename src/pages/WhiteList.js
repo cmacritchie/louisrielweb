@@ -9,13 +9,15 @@ const WhiteList = props => {
      const [activId, setActiveId] = useState(0)
 
 
-    const {state:{ loaded, entries },
+    const {state:{ loaded, entries, error },
         fetchWhiteList, deleteWhiteList
         } = useContext(WhiteListContext)
 
 
     useEffect(() => {
-        fetchWhiteList()
+        if(!loaded) {
+            fetchWhiteList()
+        }
     }, [loaded])
 
     if(!loaded){
@@ -25,7 +27,6 @@ const WhiteList = props => {
 
 
     const renderWhiteList = () => {
-        console.log(entries)
        return entries.map(entry => {
             if(entry._id === activId){
                return ( <tr key={entry._id}>
@@ -40,42 +41,62 @@ const WhiteList = props => {
                 return (
                     <tr key={entry._id}>
                         <td>{entry.email}</td>
-                        <td>
-                            {entry.user.length > 0 &&
-                                <NavLink to={`/user/${entry.user[0]._id}`}> hello</NavLink>
+                            {entry.user.length > 0 ?
+                                <>
+                                    <td>
+                                        <NavLink className="btn light-blue darken-4" to={`/user/${entry.user[0]._id}`}><i className="material-icons">face</i></NavLink>
+                                    </td>
+                                    <td></td>
+                                </>
+                                :
+                                <>
+                                    <td></td>
+                                    <td>
+                                        <button className='btn amber' onClick={()=>setActiveId(entry._id)}><i className="material-icons">edit</i></button>
+                                    </td>
+                                </>
                             }
-                            
-                        
-                        </td>
-                        <td><button onClick={()=>setActiveId(entry._id)}>edit</button></td>
-                        <td><button onClick={()=>deleteWhiteList(entry._id)}>Delete</button></td>
+                        <td><button className='btn red darken-1' onClick={()=>deleteWhiteList(entry._id)}><i className="material-icons">delete_forever</i></button></td>
                     </tr>
                 )
             }
         })
     }
 
-    if(entries.length === 0) {
-        return <p>No White List emails!</p>
-    } else {
-
-        return (
-            <>
-                <h2>add to whiteList</h2>
-                <RenderTable>
+    return (
+        <>
+            <h2>add to whiteList</h2>
+            { error &&
+                <p>Error: {error}</p>
+            }
+            <table>
+                <thead>
+                    <tr >
+                        <th>New Email</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
                     <tr key={1}>
-                    <WhiteListWrapper edit={false}
+                        <WhiteListWrapper edit={false}
                                         id={1}
                                         />
                     </tr>
-                </RenderTable>
-                <br />
-                <RenderTable>
+                </tbody>
+            </table>
+            <br />
+            {entries.length > 0 ?
+                <RenderTable profile={true}>
                     {renderWhiteList()}
                 </RenderTable>
-            </>
-        )
-    }
+            :
+                <p>No White List emails!</p>
+            }
+        </>
+    )
+    
 }
 
 WhiteList.propTypes = {
