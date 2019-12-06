@@ -3,6 +3,7 @@ import { Context as WhiteListContext } from '../contexts/WhiteListContext'
 import RenderTable from '../components/RenderTable'
 import WhiteListWrapper from '../components/WhiteListWrapper'
 import { NavLink } from 'react-router-dom'
+import requireAuth from '../components/requireAuth'
 
 const WhiteList = props => {
 
@@ -103,5 +104,5 @@ WhiteList.propTypes = {
 
 }
 
-export default WhiteList
+export default requireAuth(false, false)(WhiteList)
 
