@@ -2,33 +2,44 @@ import React, { useState, useContext, useEffect } from "react";
 import RecordEntry from "../components/RecordEntry"
 import { Context as HouseContext } from '../contexts/HousePointsContext'
 import axios from 'axios';
+import requireAuth from '../components/requireAuth'
 
-const HousePointWrapper = ({ match } )=>{
-  const { params } = match
+const HousePointWrapper = ({ match, location: { pathname } } )=>{
+  console.log(pathname)
+  
+  const { params: { id, entryid } } = match
+
+  const {state:{ entries}, fetchUserPoints } = useContext(HouseContext)
+
 
   const [isLoaded, setLoaded] = useState(false)
   const [isEdit, setEdit] = useState(false)
   const [initialPoints, setInitialPoints] = useState()
 
   useEffect(() => {
-    if(Object.keys(params).length > 0){
-      const getExistingPoints = async (id) => {
+    
+    if(id && !entries[id]) {
+      fetchUserPoints(id)
+    }
+
+    if(entryid){
+        const getExistingPoints = async (id) => {
         const response = await axios.get(`/api/house/${id}`)
         setInitialPoints(response.data)
         setEdit(true)
         setLoaded(true)
       }
-      getExistingPoints(params.id)
+      getExistingPoints(entryid)
      
     } else {
       setLoaded(true)
     }
-  }, [])
+  }, [pathname])
 
   if(!isLoaded) {
     return <p>...loading</p>
   } else if(isLoaded && isEdit ) {
-    return <HousePoints initialPoints={initialPoints} edit={true} id={params.id} />
+    return <HousePoints initialPoints={initialPoints} edit={true} id={entryid} />
   } else if(isLoaded && !isEdit) {
     return <HousePoints />
   }
@@ -69,22 +80,23 @@ const  HousePoints = ({ initialPoints, edit, id }) => {
     
             <RecordEntry onEntryChange={(points)=>setWolfPoints(points)}
                         initialValue={initialPoints.wolf}
-                        colour="white"
+                        colour="orange lighten-5"
                         house="Wolf" />
             <RecordEntry onEntryChange={(points)=>setBearPoints(points)}
                         initialValue={initialPoints.bear}
-                        colour="blue"
+                        colour="green lighten-5"
                         house="Bear" />
             <RecordEntry onEntryChange={(points)=>setEaglePoints(points)}
                         initialValue={initialPoints.eagle}
-                        colour="red"
+                        colour="blue lighten-5"
                         house="Eagle" />
             <RecordEntry onEntryChange={(points)=>setTurtlePoints(points)}
                         initialValue={initialPoints.turtle}
-                        colour="green"
+                        colour="red lighten-5"
                         house="Turtle" />
              </tbody>
         </table>
+        <br />
         <button className="btn green accent-4" onClick={handleSubmit}>Submit</button>
     </div>
   );
@@ -100,4 +112,4 @@ HousePoints.defaultProps = {
   }
 }
 
-export default HousePointWrapper
+export default requireAuth()(HousePointWrapper)

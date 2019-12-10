@@ -2,6 +2,8 @@ import createDataContext from './createDataContext';
 import axios from 'axios'
 import { toastSuccess, toastError } from './toasts'
 import { socket } from '../api/socketAPI'
+
+import { history } from '../components/App'
 // import socketIOClient from "socket.io-client";
 
 // const endPoint = 'http://localhost:5000'
@@ -33,22 +35,40 @@ const housePointReducer = (state, action) => {
         case SUBMIT_HOUSE_POINTS:
             return {...state, 
                 // entries:[action.payload, ...state.entries], 
-                myEntries:[action.payload, ...state.myEntries]}
+                entries:{[action.payload.owner]:{ 
+                            ...state.entries[action.payload.owner],
+                            housePoints:[
+                                action.payload,
+                                ...state.entries[action.payload.owner].housePoints
+                            ]
+                        }
+                    }
+                }
         case DELETE_HOUSE_POINTS:
             return {...state,
-                myEntries: state.myEntries.filter(entry => {
+                entries:{...state.entries,
+                        [action.payload.owner]: {
+                        ...state.entries[action.payload.owner],    
+                        housePoints:state.entries[action.payload.owner].housePoints.filter(entry => {
                         return entry._id !== action.payload._id
                     })}
+                }
+            }
         // case FETCH_MY_HOUSE_POINTS:
         //     return {...state, myEntriesLoaded: true, myEntries:action.payload }
         case PATCH_HOUSE_POINTS:
             return {...state,
-                    myEntries: state.myEntries.map(entry => {
-                        if(entry._id !== action.payload._id){
-                            return entry
+                    entries:{...state.entries,
+                            [action.payload.owner]: {
+                            ...state.entries[action.payload.owner],    
+                            housePoints:state.entries[action.payload.owner].housePoints.map(entry => {
+                                if(entry._id !== action.payload._id){
+                                    return entry
+                                }
+                                return action.payload
+                            }) 
                         }
-                        return action.payload
-                    }) 
+                    }
                 }
         case FETCH_USER_HOUSE_POINTS:
             return {...state, entries:{...state.entries, [action.payload._id]:action.payload }, entryLoaded:true}   
@@ -62,7 +82,6 @@ const housePointReducer = (state, action) => {
 
 
 const wsUpdatePoints = dispatch => (housePoints) => {
-    console.log(housePoints)
     dispatch({ type: WS_SUBMIT_HOUSE_POINTS, payload: housePoints });   
 }
 
@@ -70,6 +89,7 @@ const submitPoints = dispatch => async (points) => {
     try{
         const response = await axios.post('/api/house', points)
         dispatch({ type: SUBMIT_HOUSE_POINTS, payload: response.data });
+        history.push(`/user/${response.data.owner}`)
         toastSuccess("House Points Added")
         socket.emit('incomingData', response.data, (error) =>{
             console.log('post ws error',error)
@@ -108,10 +128,10 @@ const deletePoints = dispatch => async (id) => {
     }
 }
 
-const fetchMyPoints = dispatch => async () => {
-    const response = await axios.get('/api/myhouse')
-    dispatch({ type: FETCH_MY_HOUSE_POINTS, payload: response.data });
-}
+// const fetchMyPoints = dispatch => async () => {
+//     const response = await axios.get('/api/myhouse')
+//     dispatch({ type: FETCH_MY_HOUSE_POINTS, payload: response.data });
+// }
 
 const fetchUserPoints = dispatch => async (id) => {
     dispatch({ type:USER_ENTRIES_LOADING })
@@ -125,7 +145,7 @@ const fetchUserPoints = dispatch => async (id) => {
 export const { Context, Provider } = createDataContext(
     housePointReducer,
     { fetchPoints, submitPoints, deletePoints, 
-        wsUpdatePoints, fetchMyPoints, editPoints, fetchUserPoints },
+        wsUpdatePoints, editPoints, fetchUserPoints },
     { sumEntries:{}, loaded: false, 
     entries:{},
     entryLoaded:false,

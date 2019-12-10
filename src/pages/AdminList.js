@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
+import requireAuth from '../components/requireAuth'
 import AdminListWrapper from '../components/AdminListWrapper'
 import { Context as AdminContext } from '../contexts/AdminListContext'
 import  RenderTable  from '../components/RenderTable'
@@ -47,7 +47,7 @@ const AdminList = props => {
 
     return (
         <>
-            <h2>add to admin List</h2>
+            <h2>Admin Email White List</h2>
             <table>
                 <thead>
                     <tr >
@@ -83,4 +83,4 @@ AdminList.propTypes = {
 
 }
 
-export default AdminList
+export default requireAuth(false, true)(AdminList)

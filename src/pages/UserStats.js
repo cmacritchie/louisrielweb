@@ -1,17 +1,20 @@
 import React, { useContext, useEffect, useState} from 'react'
 import { Context as HouseContext } from '../contexts/HousePointsContext'
 import moment from 'moment'
+import requireAuth from '../components/requireAuth'
 import { NavLink } from 'react-router-dom';
 
 const UserStats = ({ match }) => {
-    const { params } = match
-    const userId = params.id
+    
+    const { params: { id } } = match 
+    const userId = id
 
     const {state:{ entries, entryLoaded },
     fetchUserPoints, deletePoints } = useContext(HouseContext)
 
             useEffect(() => {
-                if(Object.keys(params).length > 0 && !entries[userId]){
+                if(userId && !entries[userId]){
+                        console.log("fetching points")
                         fetchUserPoints(userId)
                     }
             }, [])
@@ -45,7 +48,7 @@ const UserStats = ({ match }) => {
                                                 <td>{entry.bear}</td>
                                                 <td>{entry.wolf}</td>
                                                 <td>{entry.turtle}</td>
-                                                <td><NavLink className='btn amber' to={`/houseentry/${entry._id}`}><i className="material-icons">edit</i></NavLink></td>
+                                                <td><NavLink className='btn amber' to={`/user/${userProfile._id}/houseentry/${entry._id}`}><i className="material-icons">edit</i></NavLink></td>
                                                 <td><button className='btn red darken-1' onClick={()=>deletePoints(entry._id)}><i className="material-icons">delete_forever</i></button></td>
                                             </tr>
                                         )
@@ -67,4 +70,5 @@ const UserStats = ({ match }) => {
             )
         }
 
- export default UserStats
+//  export default requireAuth()(UserStats)
+export default UserStats

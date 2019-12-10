@@ -8,27 +8,21 @@ const RecordEntry = ({ onEntryChange, initialValue, colour, house, }) => {
     },[points])
 
     return(
-            <tr style={{backgroundColor:colour}}>
+            <tr className={colour}>
+                <td>
+                    {house}
+                </td>
                     <td>
-                        <button className="btn green accent-3" onClick={()=>setPoints(points + 25)}>25</button>
+                        <button className="btn blue-grey lighten-5" onClick={()=>setPoints(points + 5)} >+5</button>
                     </td>
                     <td>
-                        <button className="btn green accent-2" onClick={()=>setPoints(points + 5)} >5</button>
+                        <button className="btn blue-grey lighten-5" onClick={()=>setPoints(points + 1)} >+1</button>
                     </td>
                     <td>
-                        <button className="btn green accent-1" onClick={()=>setPoints(points + 1)} >1</button>
+                        <input max="1000" type="number" onChange={(e)=>setPoints(e.target.value)}  value={points} />
                     </td>
                     <td>
-                        <input  value={points}  readOnly/>
-                    </td>
-                    <td>
-                        <button className="btn red lighten-4" onClick={()=>setPoints(points -1)}>1</button>
-                    </td>
-                    <td>
-                        <button className="btn red lighten-1" onClick={()=>setPoints(points - 5)}>5</button>
-                    </td>
-                    <td>
-                        <button className="btn red darken-4" onClick={()=>setPoints(points - 25)}>25</button>
+                        <button className="btn blue darken-1" onClick={()=>setPoints(0)}>Clear</button>
                     </td>
             </tr>
     )

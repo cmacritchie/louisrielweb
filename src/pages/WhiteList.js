@@ -26,7 +26,6 @@ const WhiteList = props => {
     }
 
 
-
     const renderWhiteList = () => {
        return entries.map(entry => {
             if(entry._id === activId){
@@ -45,7 +44,7 @@ const WhiteList = props => {
                             {entry.user.length > 0 ?
                                 <>
                                     <td>
-                                        <NavLink className="btn light-blue darken-4" to={`/user/${entry.user[0]._id}`}><i className="material-icons">face</i></NavLink>
+                                        <NavLink className="btn light-blue darken-4" to={`/user/${entry.user[0]._id}/${entry._id}`}><i className="material-icons">face</i></NavLink>
                                     </td>
                                     <td></td>
                                 </>
@@ -66,7 +65,7 @@ const WhiteList = props => {
 
     return (
         <>
-            <h2>add to whiteList</h2>
+            <h2>User Email WhiteList</h2>
             { error &&
                 <p>Error: {error}</p>
             }
@@ -97,12 +96,12 @@ const WhiteList = props => {
             }
         </>
     )
-    
 }
 
 WhiteList.propTypes = {
 
 }
 
-export default requireAuth(false, false)(WhiteList)
+// export default requireAuth(true)(WhiteList)
+export default WhiteList
 
