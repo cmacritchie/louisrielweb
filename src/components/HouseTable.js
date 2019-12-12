@@ -1,57 +1,11 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { Context as HouseContext } from '../contexts/HousePointsContext'
-import { Context as UserContext } from '../contexts/UserContext'
+import {VictoryChart, VictoryBar } from 'victory'
 
 const HouseTable = ({ housePoints }) => {
 
-    console.log(housePoints)
-
-    // const { state: { isAuthenticated, user, 
-    //     loading } } = useContext(UserContext)
-
-    // const { state: { loaded, entries },
-    //  fetchPoints, deletePoints } = useContext(HouseContext)
-
-    
-
-        
-    // const renderTable = (entryList) => {
-    //     return entryList.map(entry => {
-    //         return (
-                
-    //             <tr key={entry._id}>
-    //                 <td>{entry.wolf}</td>
-    //                 <td>{entry.eagle}</td>
-    //                 <td>{entry.turtle}</td>
-    //                 <td>{entry.bear}</td>
-    //                 { isAuthenticated &&
-    //                 <>
-    //                     {
-    //                         ( entry.owner === user._id || user.admin || user.apexAdmin ) ?
-    //                         <>
-    //                         <td><button onClick={()=>deletePoints(entry._id)}>delete</button></td>
-    //                         <td>edit</td>
-    //                         </>
-    //                         :
-    //                         <>
-    //                         <td></td>
-    //                         <td></td>
-    //                         </>
-    //                     }
-    //                 </>
-                        
-    //                 }
-                    
-    //             </tr>
-    //         )
-    //     })
-    // }
-
     return (
         <>
-            <h1>Landing Page</h1>
-            <h3>entries</h3>
             <table>
                     <thead>
                         <tr>
@@ -70,7 +24,30 @@ const HouseTable = ({ housePoints }) => {
                         </tr>
                     </tbody>
             </table>
-
+            <VictoryChart
+            height={400}
+                domainPadding={{ x: 20 }}
+                animate={{ duration: 2000,
+                    onLoad: { duration: 1000 } }}
+                >
+                <VictoryBar
+                labels={({ datum }) => Math.round(datum.y)}
+                
+                    data={[
+                        { x: 'Bear', y: housePoints.bear, opacity: 0.5, fill: "blue" },
+                        { x: 'Wolf', y: housePoints.wolf, opacity: 0.5, fill: "green"},
+                        { x: 'Eagle', y: housePoints.eagle, opacity: 0.5, fill: "red"},
+                        { x: 'Turtle', y: housePoints.turtle, opacity: 0.5, fill: "yellow"},
+                    
+                    ]}
+                style={{
+                    data: {
+                        fill: ({ datum }) => datum.fill,
+                        opacity: ({ datum }) => datum.opacity
+                    }
+                    }}
+                    />
+            </VictoryChart>
         </>
     )
 }

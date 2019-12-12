@@ -16,6 +16,7 @@ const DELETE_HOUSE_POINTS = 'delete_points'
 const FETCH_MY_HOUSE_POINTS = 'fetch_my_house_points'
 const FETCH_USER_HOUSE_POINTS = 'fetch_user_house_points'
 const USER_ENTRIES_LOADING = 'loading_entries'
+const USER_LOADING_ERROR = 'loading_error'
 
 const WS_SUBMIT_HOUSE_POINTS = 'ws_submit_house_points'
 
@@ -74,6 +75,8 @@ const housePointReducer = (state, action) => {
             return {...state, entries:{...state.entries, [action.payload._id]:action.payload }, entryLoaded:true}   
         case USER_ENTRIES_LOADING:
             return {...state, entryLoaded:false }
+        case USER_LOADING_ERROR: 
+            return {...state, entryLoaded:false } //change to true? put error  
         default:
             return state;
 
@@ -134,12 +137,20 @@ const deletePoints = dispatch => async (id) => {
 // }
 
 const fetchUserPoints = dispatch => async (id) => {
-    dispatch({ type:USER_ENTRIES_LOADING })
+    try {
+        dispatch({ type:USER_ENTRIES_LOADING })
+    
+        const response = await axios.get(`/api/userpoints/${id}`)
+        const [ user ] = response.data
+        
+        console.log(response.data)
+        
+    
+        dispatch({ type: FETCH_USER_HOUSE_POINTS, payload: user });
 
-    const response = await axios.get(`/api/userpoints/${id}`)
-    const [ user ] = response.data
-
-    dispatch({ type: FETCH_USER_HOUSE_POINTS, payload: user });
+    } catch (e) {
+        dispatch({ type:USER_LOADING_ERROR })
+    }
 }
 
 export const { Context, Provider } = createDataContext(
@@ -151,5 +162,5 @@ export const { Context, Provider } = createDataContext(
     entryLoaded:false,
     myEntries:[], myEntriesLoaded:false, 
     adminEntries:[] 
-}
+    }
 )

@@ -13,6 +13,7 @@ const UserStats = ({ match }) => {
     fetchUserPoints, deletePoints } = useContext(HouseContext)
 
             useEffect(() => {
+                console.log(entries)
                 if(userId && !entries[userId]){
                         console.log("fetching points")
                         fetchUserPoints(userId)

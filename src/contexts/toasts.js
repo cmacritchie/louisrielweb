@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 
 export const toastSuccess = (message) => {
-    toast.success(message, { className: "green lighten-3" })
+    toast.success(message, { className: "green accent-4" })
 }
 
 export const toastError = (message) => {
