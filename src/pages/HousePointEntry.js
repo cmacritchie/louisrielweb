@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import RecordEntry from "../components/RecordEntry"
 import { Context as HouseContext } from '../contexts/HousePointsContext'
+import { Link } from 'react-router-dom'
 import axios from 'axios';
 import requireAuth from '../components/requireAuth'
 
 const HousePointWrapper = ({ match, location: { pathname } } )=>{
-  console.log(pathname)
-  
+
   const { params: { id, entryid } } = match
 
   const {state:{ entries}, fetchUserPoints } = useContext(HouseContext)
@@ -39,15 +39,15 @@ const HousePointWrapper = ({ match, location: { pathname } } )=>{
   if(!isLoaded) {
     return <p>...loading</p>
   } else if(isLoaded && isEdit ) {
-    return <HousePoints initialPoints={initialPoints} edit={true} id={entryid} />
+    return <HousePoints initialPoints={initialPoints} edit={true} userId={id} id={entryid} />
   } else if(isLoaded && !isEdit) {
-    return <HousePoints />
+    return <HousePoints userId={id} />
   }
 
   return <p>error</p>
 }
 
-const  HousePoints = ({ initialPoints, edit, id }) => {
+const  HousePoints = ({ initialPoints, edit, id, userId }) => {
     const { submitPoints, editPoints } = useContext(HouseContext)
 
     const [wolfPoints, setWolfPoints] = useState(initialPoints.wolf)
@@ -72,31 +72,33 @@ const  HousePoints = ({ initialPoints, edit, id }) => {
 
   return (
     <div>
-    <h2>House Entry</h2>
-    <table>
-      <tbody>
-
-
-    
-            <RecordEntry onEntryChange={(points)=>setWolfPoints(points)}
-                        initialValue={initialPoints.wolf}
-                        colour="orange lighten-5"
-                        house="Wolf" />
-            <RecordEntry onEntryChange={(points)=>setBearPoints(points)}
-                        initialValue={initialPoints.bear}
-                        colour="green lighten-5"
-                        house="Bear" />
-            <RecordEntry onEntryChange={(points)=>setEaglePoints(points)}
-                        initialValue={initialPoints.eagle}
-                        colour="blue lighten-5"
-                        house="Eagle" />
-            <RecordEntry onEntryChange={(points)=>setTurtlePoints(points)}
-                        initialValue={initialPoints.turtle}
-                        colour="red lighten-5"
-                        house="Turtle" />
-             </tbody>
-        </table>
-        <br />
+      <br />
+      <Link to={`/user/${userId}`}>
+        <button className="btn blue accent-4">back</button>
+      </Link>   
+    <h4>House Entry</h4>
+      <table>
+        <tbody>
+          <RecordEntry onEntryChange={(points)=>setBearPoints(points)}
+                            initialValue={initialPoints.bear}
+                            colour="green lighten-5"
+                            house="Bear" />
+          <RecordEntry onEntryChange={(points)=>setWolfPoints(points)}
+                      initialValue={initialPoints.wolf}
+                      colour="orange lighten-5"
+                      house="Wolf" />
+          
+          <RecordEntry onEntryChange={(points)=>setEaglePoints(points)}
+                      initialValue={initialPoints.eagle}
+                      colour="blue lighten-5"
+                      house="Eagle" />
+          <RecordEntry onEntryChange={(points)=>setTurtlePoints(points)}
+                      initialValue={initialPoints.turtle}
+                      colour="red lighten-5"
+                      house="Turtle" />
+        </tbody>
+      </table>
+      <br />
         <button className="btn green accent-4" onClick={handleSubmit}>Submit</button>
     </div>
   );

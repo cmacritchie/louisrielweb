@@ -98,10 +98,5 @@ const WhiteList = props => {
     )
 }
 
-WhiteList.propTypes = {
-
-}
-
-// export default requireAuth(true)(WhiteList)
-export default WhiteList
+export default requireAuth(true)(WhiteList)
 

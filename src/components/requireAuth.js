@@ -38,7 +38,7 @@ export default (adminAuth = false, apexAuth = false) => ChildComponent => {
                         <br />
                         </>
                     }
-                    <NavLink to='/'>House Points</NavLink>
+                    <NavLink to='/'>Home</NavLink>
                 </>
             )
             

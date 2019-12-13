@@ -1,16 +1,15 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 const LoginError = props => {
     return (
         <div>
             <p>Your Email has not been whitelisted</p>
+            <Link to={`/`}>
+                <button className="btn blue accent-4">back</button>
+            </Link> 
         </div>
     )
-}
-
-LoginError.propTypes = {
-
 }
 
 export default LoginError

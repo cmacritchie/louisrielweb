@@ -30,7 +30,7 @@ const App = () => {
             <Router history={history}>
             <ToastContainer
                 position="bottom-center"
-                autoClose={2000}
+                autoClose={1500}
                 hideProgressBar
                 newestOnTop={false}
                 closeOnClick

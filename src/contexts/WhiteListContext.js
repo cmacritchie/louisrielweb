@@ -84,7 +84,6 @@ const deleteWhiteList = dispatch => async (id) => {
         dispatch({type: DELETE_WHITELIST, payload: response.data})
         // toastSuccess('Email Deleted')
     } catch (e) {
-        debugger;
         toastError('Error Deleting Email')
     }
 }
@@ -92,10 +91,10 @@ const deleteWhiteList = dispatch => async (id) => {
 
 //for admin purposes
 
-const fetchWhiteListUser = dispatch => async (id) => {
-    const response = await axios.get(`api/whitelistuser/${id}`)
-    dispatch({type: FETCH_WHITELIST_USER, payload: response.data})
-}
+// const fetchWhiteListUser = dispatch => async (id) => {
+//     const response = await axios.get(`api/whitelistuser/${id}`)
+//     dispatch({type: FETCH_WHITELIST_USER, payload: response.data})
+// }
 
 export const { Context, Provider } = createDataContext(
     whiteListReducer,

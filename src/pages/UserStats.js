@@ -13,9 +13,7 @@ const UserStats = ({ match }) => {
     fetchUserPoints, deletePoints } = useContext(HouseContext)
 
             useEffect(() => {
-                console.log(entries)
                 if(userId && !entries[userId]){
-                        console.log("fetching points")
                         fetchUserPoints(userId)
                     }
             }, [])
@@ -23,17 +21,17 @@ const UserStats = ({ match }) => {
             if(entryLoaded && entries[userId]) {
                 const userProfile = entries[userId]
                 return( <div>
-                        <div>
-                            <p>user: {userProfile.name}</p>
-                        </div>
+                            <div>
+                                <p>User: {userProfile.name}</p>
+                            </div>
                         { userProfile.housePoints.length > 0 ?
                             <table>
                                 <thead>
                                     <tr>
                                         <th>Date</th>
-                                        <th>Eagle</th>
                                         <th>Bear</th>
                                         <th>Wolf</th>
+                                        <th>Eagle</th>
                                         <th>Turtle</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
@@ -45,9 +43,9 @@ const UserStats = ({ match }) => {
                                         return (
                                             <tr key={entry._id}>
                                                 <td>{moment(entry.updatedAt).format('YYYY MM DD')}</td>
-                                                <td>{entry.eagle}</td>
                                                 <td>{entry.bear}</td>
                                                 <td>{entry.wolf}</td>
+                                                <td>{entry.eagle}</td>
                                                 <td>{entry.turtle}</td>
                                                 <td><NavLink className='btn amber' to={`/user/${userProfile._id}/houseentry/${entry._id}`}><i className="material-icons">edit</i></NavLink></td>
                                                 <td><button className='btn red darken-1' onClick={()=>deletePoints(entry._id)}><i className="material-icons">delete_forever</i></button></td>
@@ -71,5 +69,4 @@ const UserStats = ({ match }) => {
             )
         }
 
-//  export default requireAuth()(UserStats)
-export default UserStats
+export default requireAuth()(UserStats)

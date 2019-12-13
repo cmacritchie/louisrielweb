@@ -25,12 +25,18 @@ const LandingWrapper = () => {
 
 const Landing = ({ sumEntries }) => {
 
-     const { wsUpdatePoints } = useContext(HouseContext)
+     const { wsPostPoints, wsPatchPoints, wsDeletePoints } = useContext(HouseContext)
 
     useEffect(() => {
-        socket.on("outgoingData", data => {
-            wsUpdatePoints(data.num)
-        })      
+        socket.on("postedData", data => {
+            wsPostPoints(data.num)
+        })   
+        socket.on("deletedData", data => {
+            wsDeletePoints(data.num)
+        })   
+        socket.on("patchedData", data => {
+            wsPatchPoints(data.num)
+        })
     }, [])
 
     return <HouseTable  housePoints={sumEntries} />

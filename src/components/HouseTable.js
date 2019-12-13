@@ -1,51 +1,33 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {VictoryChart, VictoryBar } from 'victory'
+import {VictoryChart, VictoryBar, VictoryContainer } from 'victory'
 
 const HouseTable = ({ housePoints }) => {
 
     return (
         <>
-            <table>
-                    <thead>
-                        <tr>
-                            <th>Wolf</th>
-                            <th>Eagle</th>
-                            <th>Turtle</th>
-                            <th>Bear</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{housePoints.wolf}</td>
-                            <td>{housePoints.eagle}</td>
-                            <td>{housePoints.turtle}</td>
-                            <td>{housePoints.bear}</td>
-                        </tr>
-                    </tbody>
-            </table>
             <VictoryChart
-            height={400}
+            height={350}
                 domainPadding={{ x: 20 }}
-                animate={{ duration: 2000,
+                animate={{ duration: 1000,
                     onLoad: { duration: 1000 } }}
                 >
                 <VictoryBar
-                labels={({ datum }) => Math.round(datum.y)}
-                
-                    data={[
-                        { x: 'Bear', y: housePoints.bear, opacity: 0.5, fill: "blue" },
-                        { x: 'Wolf', y: housePoints.wolf, opacity: 0.5, fill: "green"},
-                        { x: 'Eagle', y: housePoints.eagle, opacity: 0.5, fill: "red"},
-                        { x: 'Turtle', y: housePoints.turtle, opacity: 0.5, fill: "yellow"},
-                    
-                    ]}
-                style={{
-                    data: {
-                        fill: ({ datum }) => datum.fill,
-                        opacity: ({ datum }) => datum.opacity
-                    }
-                    }}
+                    labels={({ datum }) => Math.round(datum.y)}
+                    containerComponent={<VictoryContainer responsive={false} />}
+                        data={[
+                            { x: 'Bear', y: housePoints.bear, opacity: 0.5, fill: "blue" },
+                            { x: 'Wolf', y: housePoints.wolf, opacity: 0.5, fill: "green"},
+                            { x: 'Eagle', y: housePoints.eagle, opacity: 0.5, fill: "red"},
+                            { x: 'Turtle', y: housePoints.turtle, opacity: 0.5, fill: "yellow"},
+                        
+                        ]}
+                    style={{
+                        data: {
+                            fill: ({ datum }) => datum.fill,
+                            opacity: ({ datum }) => datum.opacity
+                        }
+                        }}
                     />
             </VictoryChart>
         </>
